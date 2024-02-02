@@ -1,10 +1,10 @@
 import { useContext, useEffect } from "react";
-import { WebsocketContext } from "../contexts/WebsocketContext";
-import { GameContext } from "../contexts/GameContext";
-import { UpdateState } from "../models/UpdateState/UpdateState";
-import { USPlayer } from "../models/UpdateState/USPlayer";
-import { BallHit } from "../models/BallHit/BallHit";
-import { StatfeedEvent } from "../models/StatfeedEvent/StatfeedEvent";
+import { WebsocketContext } from "../../contexts/WebsocketContext";
+import { GameContext } from "../../contexts/GameContext";
+import { UpdateState } from "../../models/UpdateState/UpdateState";
+import { USPlayer } from "../../models/UpdateState/USPlayer";
+import { BallHit } from "../../models/BallHit/BallHit";
+import { StatfeedEvent } from "../../models/StatfeedEvent/StatfeedEvent";
 import {
   ASSIST_EVENT,
   DEMO_EVENT,
@@ -15,9 +15,10 @@ import {
   SAVE_EVENT,
   SHOT_EVENT,
   WIN_EVENT,
-} from "../constants/GameConstants";
-import { GoalScored } from "../models/GoalScored/GoalScored";
-import { MatchEnded } from "../models/MatchEnded/MatchEnded";
+} from "../../constants/GameConstants";
+import { GoalScored } from "../../models/GoalScored/GoalScored";
+import { MatchEnded } from "../../models/MatchEnded/MatchEnded";
+import { Scorebug } from "../Scorebug/Scorebug";
 
 export const Overlay = () => {
   const websocket = useContext(WebsocketContext);
@@ -135,5 +136,9 @@ export const Overlay = () => {
     });
   });
 
-  return <></>;
+  return (
+    <>
+      <Scorebug />
+    </>
+  );
 };

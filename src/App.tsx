@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { WebsocketService } from "./services/websocketService";
 import { WebsocketContext } from "./contexts/WebsocketContext";
-import { Overlay } from "./components/Overlay";
+import { Overlay } from "./components/Overlay/Overlay";
 import { GameInfo } from "./models/contexts/GameInfo";
 import { DEFAULT_GAME_INFO, GameContext } from "./contexts/GameContext";
 import { WEBSOCKET_PORT } from "./constants/GameConstants";

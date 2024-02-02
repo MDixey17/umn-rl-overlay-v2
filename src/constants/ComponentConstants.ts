@@ -73,6 +73,7 @@ export const SCOREBUG_CLOCK = {
   leftPercentage: 36.9,
   topOffset: TEAM_PLAYER_GROUP.topOffset,
   zIndex: 3,
+  borderTopWidth: 4,
   text: {
     leftPercentage: 47.25,
     top: -28,
@@ -80,7 +81,7 @@ export const SCOREBUG_CLOCK = {
   },
   overtime: {
     fontSize: 50,
-    topOffset: -4,
+    topOffset: 16,
   },
 };
 
