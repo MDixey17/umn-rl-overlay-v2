@@ -1,0 +1,10 @@
+@font-face {
+  font-family: bahnschrift;
+  src: url('./assets/fonts/BAHNSCHRIFT.TTF');
+}
+
+body {
+  margin: 0;
+  height: 1080px;
+  width: 1920px;
+}
