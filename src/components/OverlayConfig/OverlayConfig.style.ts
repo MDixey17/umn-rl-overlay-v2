@@ -41,6 +41,13 @@ export const ConfigInput = styled.input`
   border-radius: 6px;
 `;
 
+export const ConfigColorTextInput = styled.input`
+  margin-left: 4px;
+  margin-bottom: 12px;
+  border-radius: 6px;
+  width: 60px;
+`;
+
 export const ConfigPreviewWrapper = styled.div`
   width: 30%;
   margin-right: 15%;
@@ -72,3 +79,9 @@ export const ConfigPreviewScoreText = styled.p`
 export const ConfigButton = styled.button``;
 
 export const ConfigLabel = styled.label``;
+
+export const ConfigLeagueLogoPreview = styled.img`
+  max-height: 200px;
+  width: auto;
+  max-width: 450px;
+`;

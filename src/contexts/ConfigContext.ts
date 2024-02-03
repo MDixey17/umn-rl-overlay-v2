@@ -21,6 +21,12 @@ export const DEFAULT_CONFIG_INFO: ConfigInfo = {
   },
   seriesLength: 1,
   hideConfig: false,
+  broadcastTeam: {
+    caster1: "",
+    caster2: "",
+    broadcaster: "",
+  },
+  leagueAvatar: "",
 };
 
 export const ConfigContext = createContext<ConfigContextModel>({

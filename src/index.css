@@ -3,6 +3,16 @@
   src: url('./assets/fonts/BAHNSCHRIFT.TTF');
 }
 
+@keyframes slideleft {
+  from {
+    left: -4px;
+  }
+
+  to {
+    left: -500px;
+  }
+}
+
 body {
   margin: 0;
   height: 1080px;

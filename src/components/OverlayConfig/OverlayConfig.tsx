@@ -1,11 +1,13 @@
 import React, { useContext } from "react";
 import {
   ConfigButton,
+  ConfigColorTextInput,
   ConfigContainer,
   ConfigHeading,
   ConfigInput,
   ConfigInputWrapper,
   ConfigLabel,
+  ConfigLeagueLogoPreview,
   ConfigPreviewImage,
   ConfigPreviewScoreText,
   ConfigPreviewScoreWrapper,
@@ -15,9 +17,27 @@ import {
   ConfigWrapper,
 } from "./OverlayConfig.style";
 import { ConfigContext } from "../../contexts/ConfigContext";
+import {
+  DEFAULT_BLUE_COLORS,
+  DEFAULT_ORANGE_COLORS,
+} from "../../constants/ComponentConstants";
+
+import CRLLogo from "../../assets/logos/leagues/CRL.png";
+import NACELogo from "../../assets/logos/leagues/NACE.png";
+import SummerSeriesLogo from "../../assets/logos/leagues/SummerSeries.png";
+
+const LEAGUE_LOGO_MAP: Map<string, string> = new Map([
+  ["CRL", CRLLogo],
+  ["BEC", ""],
+  ["Summer Series", SummerSeriesLogo],
+  ["NACE", NACELogo],
+]);
 
 export const OverlayConfig = () => {
   const { configInfo, setConfigInfo } = useContext(ConfigContext);
+
+  const UMN_PRIMARY = "#7B0012";
+  const UMN_SECONDARY = "#FFCD30";
 
   const handleAvatarChange = (
     event: React.ChangeEvent<HTMLInputElement>,
@@ -91,6 +111,12 @@ export const OverlayConfig = () => {
           ...configInfo,
           blue: {
             ...configInfo.blue,
+            primary: event.target.checked
+              ? UMN_PRIMARY
+              : DEFAULT_BLUE_COLORS.primary,
+            secondary: event.target.checked
+              ? UMN_SECONDARY
+              : DEFAULT_BLUE_COLORS.secondary,
             isUMN: event.target.checked,
           },
         })
@@ -98,6 +124,12 @@ export const OverlayConfig = () => {
           ...configInfo,
           orange: {
             ...configInfo.orange,
+            primary: event.target.checked
+              ? UMN_PRIMARY
+              : DEFAULT_ORANGE_COLORS.primary,
+            secondary: event.target.checked
+              ? UMN_SECONDARY
+              : DEFAULT_ORANGE_COLORS.secondary,
             isUMN: event.target.checked,
           },
         });
@@ -111,6 +143,57 @@ export const OverlayConfig = () => {
       setConfigInfo({
         ...configInfo,
         seriesLength: seriesLength,
+      });
+    }
+  };
+
+  const handleBroadcastTeamChange = (
+    event: React.ChangeEvent<HTMLInputElement>,
+    member: "1" | "2" | "B"
+  ) => {
+    if (member === "1") {
+      setConfigInfo({
+        ...configInfo,
+        broadcastTeam: {
+          ...configInfo.broadcastTeam,
+          caster1: event.target.value,
+        },
+      });
+    } else if (member === "2") {
+      setConfigInfo({
+        ...configInfo,
+        broadcastTeam: {
+          ...configInfo.broadcastTeam,
+          caster2: event.target.value,
+        },
+      });
+    } else if (member === "B") {
+      setConfigInfo({
+        ...configInfo,
+        broadcastTeam: {
+          ...configInfo.broadcastTeam,
+          broadcaster: event.target.value,
+        },
+      });
+    }
+  };
+
+  const handleLeagueChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const textInput = event.target.value;
+    if (
+      textInput === "CRL" ||
+      textInput === "BEC" ||
+      textInput === "NACE" ||
+      textInput === "Summer Series"
+    ) {
+      setConfigInfo({
+        ...configInfo,
+        leagueAvatar: LEAGUE_LOGO_MAP.get(textInput)!,
+      });
+    } else {
+      setConfigInfo({
+        ...configInfo,
+        leagueAvatar: "",
       });
     }
   };
@@ -147,6 +230,15 @@ export const OverlayConfig = () => {
             }
             value={configInfo.blue.primary}
           />
+          <ConfigColorTextInput
+            type="text"
+            id="blue_primary_type"
+            name="blue_primary_type"
+            onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+              handlePrimaryChange(e, true)
+            }
+            value={configInfo.blue.primary}
+          />
           <br />
           <ConfigLabel>Secondary Color: </ConfigLabel>
           <ConfigInput
@@ -155,6 +247,15 @@ export const OverlayConfig = () => {
             name="blue_secondary"
             onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
               handleSecondaryChange(e, true)
+            }
+            value={configInfo.blue.secondary}
+          />
+          <ConfigColorTextInput
+            type="text"
+            id="blue_secondary_type"
+            name="blue_secondary_type"
+            onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+              handlePrimaryChange(e, true)
             }
             value={configInfo.blue.secondary}
           />
@@ -193,6 +294,15 @@ export const OverlayConfig = () => {
             }
             value={configInfo.orange.primary}
           />
+          <ConfigColorTextInput
+            type="text"
+            id="orange_primary_type"
+            name="orange_primary_type"
+            onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+              handlePrimaryChange(e, true)
+            }
+            value={configInfo.orange.primary}
+          />
           <br />
           <ConfigLabel>Secondary Color: </ConfigLabel>
           <ConfigInput
@@ -201,6 +311,15 @@ export const OverlayConfig = () => {
             name="orange_secondary"
             onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
               handleSecondaryChange(e, false)
+            }
+            value={configInfo.orange.secondary}
+          />
+          <ConfigColorTextInput
+            type="text"
+            id="orange_secondary_type"
+            name="orange_secondary_type"
+            onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+              handlePrimaryChange(e, true)
             }
             value={configInfo.orange.secondary}
           />
@@ -237,6 +356,39 @@ export const OverlayConfig = () => {
             onChange={handleSeriesLengthChange}
           />
           <br />
+          <ConfigLabel>League: </ConfigLabel>
+          <ConfigInput
+            type="text"
+            id="league"
+            name="league"
+            onChange={handleLeagueChange}
+            placeholder="CRL / BEC / NACE"
+          />
+          <br />
+          <ConfigLabel>Caster 1: </ConfigLabel>
+          <ConfigInput
+            type="text"
+            id="caster_one"
+            name="caster_one"
+            onChange={(e) => handleBroadcastTeamChange(e, "1")}
+          />
+          <br />
+          <ConfigLabel>Caster 2: </ConfigLabel>
+          <ConfigInput
+            type="text"
+            id="caster_two"
+            name="caster_two"
+            onChange={(e) => handleBroadcastTeamChange(e, "2")}
+          />
+          <br />
+          <ConfigLabel>Broadcaster: </ConfigLabel>
+          <ConfigInput
+            type="text"
+            id="broadcaster"
+            name="broadcaster"
+            onChange={(e) => handleBroadcastTeamChange(e, "B")}
+          />
+          <br />
           <ConfigButton
             disabled={!isValidInputs()}
             onClick={() => {
@@ -260,6 +412,8 @@ export const OverlayConfig = () => {
           <br />
           <br />
           <br />
+          <br />
+          <br />
           <ConfigPreviewImage src={configInfo.orange.avatar} />
           <br />
           <ConfigPreviewScoreWrapper
@@ -268,6 +422,13 @@ export const OverlayConfig = () => {
           >
             <ConfigPreviewScoreText>Series</ConfigPreviewScoreText>
           </ConfigPreviewScoreWrapper>
+          <br />
+          <br />
+          <br />
+          <br />
+          <br />
+          <br />
+          <ConfigLeagueLogoPreview src={configInfo.leagueAvatar} />
           <br />
         </ConfigPreviewWrapper>
       </ConfigWrapper>

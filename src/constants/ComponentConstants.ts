@@ -171,3 +171,14 @@ export const POSTGAME = {
     textMargin: 0,
   },
 };
+
+export const LEAGUE_CARD = {
+  wrapper: {
+    width: 200,
+    height: 100,
+  },
+  image: {
+    maxHeight: 75,
+    maxWidth: 175,
+  },
+};

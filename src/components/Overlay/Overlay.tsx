@@ -23,10 +23,14 @@ import { TeamPlayerGroup } from "../TeamPlayerGroup/TeamPlayerGroup";
 import { GameService } from "../../services/gameService";
 import { PlayerBoostCircle } from "../PlayerBoostCircle/PlayerBoostCircle";
 import { PlayerStatCard } from "../PlayerStatCard/PlayerStatCard";
+import { ConfigContext } from "../../contexts/ConfigContext";
+import { LeagueCard } from "../LeagueCard/LeagueCard";
+import { BroadcastCard } from "../BroadcastCard/BroadcastCard";
 
 export const Overlay = () => {
   const websocket = useContext(WebsocketContext);
   const { gameInfo, setGameInfo } = useContext(GameContext);
+  const { configInfo } = useContext(ConfigContext);
 
   // State variables
   const [hasSetWinner, setHasSetWinner] = useState<boolean>(false);
@@ -173,6 +177,16 @@ export const Overlay = () => {
     });
   });
 
+  const hasBroadcastTeam: boolean =
+    configInfo.broadcastTeam.broadcaster !== "" &&
+    (configInfo.broadcastTeam.caster1 !== "" ||
+      configInfo.broadcastTeam.caster2 !== "");
+
+  const hideBroadcastTeam: boolean =
+    gameInfo.timeRemaining < 290 ||
+    gameInfo.score.blue > 1 ||
+    gameInfo.score.orange > 1;
+
   return (
     <>
       {!showPodium && !hasSetWinner && (
@@ -180,6 +194,8 @@ export const Overlay = () => {
           <TeamPlayerGroup isLeft />
           <TeamPlayerGroup isLeft={false} />
           <Scorebug />
+          {configInfo.leagueAvatar !== "" && <LeagueCard />}
+          {hasBroadcastTeam && <BroadcastCard hide={hideBroadcastTeam} />}
           {!gameInfo.isReplay && spectatedPlayer && (
             <>
               <PlayerBoostCircle
