@@ -1,3 +1,4 @@
+import { useContext } from "react";
 import { PLAYER_BOOST_CIRCLE } from "../../constants/ComponentConstants";
 import { BoostService } from "../../services/boostService";
 import {
@@ -8,20 +9,25 @@ import {
   BoostCircleWrapper,
   BoostInnerCircle,
 } from "./PlayerBoostCircle.style";
+import { ConfigContext } from "../../contexts/ConfigContext";
 
 interface PlayerBoostCircleProps {
   boost: number;
-  primaryColor: string;
-  secondaryColor: string;
-  logo: string;
+  isBlue: boolean;
 }
 
 export const PlayerBoostCircle = ({
   boost,
-  primaryColor,
-  secondaryColor,
-  logo,
+  isBlue,
 }: PlayerBoostCircleProps) => {
+  const { configInfo } = useContext(ConfigContext);
+  const primaryColor = isBlue
+    ? configInfo.blue.primary
+    : configInfo.orange.primary;
+  const secondaryColor = isBlue
+    ? configInfo.blue.secondary
+    : configInfo.orange.secondary;
+  const logo = isBlue ? configInfo.blue.avatar : configInfo.orange.avatar;
   const circumference = BoostService.getCircumference();
   const normalizedRadius = BoostService.getNormalizedRadius();
 
@@ -64,7 +70,7 @@ export const PlayerBoostCircle = ({
           href={logo}
           height={PLAYER_BOOST_CIRCLE.innerCircle.logoHeight}
           width={PLAYER_BOOST_CIRCLE.innerCircle.logoWidth}
-          x={(PLAYER_BOOST_CIRCLE.innerCircle.radius - 25) / 2}
+          x={(PLAYER_BOOST_CIRCLE.innerCircle.radius + 36) / 2}
           y={(PLAYER_BOOST_CIRCLE.innerCircle.radius + 36) / 2}
         />
         <BoostCircleText

@@ -1,8 +1,8 @@
-import {
-  DEFAULT_BLUE_COLORS,
-  DEFAULT_ORANGE_COLORS,
-} from "../../../constants/ComponentConstants";
+import { useContext } from "react";
+import { ConfigContext } from "../../../contexts/ConfigContext";
 import { SeriesShape } from "./Series.style";
+import { GameContext } from "../../../contexts/GameContext";
+import { GameService } from "../../../services/gameService";
 
 interface SeriesProps {
   isLeft: boolean;
@@ -11,23 +11,31 @@ interface SeriesProps {
 }
 
 export const Series = ({ isLeft, leftOffset, topOffset }: SeriesProps) => {
+  const { gameInfo } = useContext(GameContext);
+  const { configInfo } = useContext(ConfigContext);
   const color = isLeft
-    ? DEFAULT_BLUE_COLORS.secondary
-    : DEFAULT_ORANGE_COLORS.secondary;
+    ? configInfo.blue.secondary
+    : configInfo.orange.secondary;
+
   return (
     <>
-      {[...Array(5)].map((_, indx) => {
-        return (
-          <SeriesShape
-            isLeft={isLeft}
-            index={indx}
-            isWon={2 - 1 >= indx}
-            color={color}
-            leftOffset={leftOffset}
-            topOffset={topOffset}
-          />
-        );
-      })}
+      {[...Array(GameService.getRequiredWins(configInfo.seriesLength))].map(
+        (_, indx) => {
+          return (
+            <SeriesShape
+              isLeft={isLeft}
+              index={indx}
+              isWon={
+                (isLeft ? gameInfo.series.blue : gameInfo.series.orange) - 1 >=
+                indx
+              }
+              color={color}
+              leftOffset={leftOffset}
+              topOffset={topOffset}
+            />
+          );
+        }
+      )}
     </>
   );
 };

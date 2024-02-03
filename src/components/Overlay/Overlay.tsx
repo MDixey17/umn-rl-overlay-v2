@@ -1,4 +1,4 @@
-import { useContext, useEffect } from "react";
+import { useContext, useEffect, useState } from "react";
 import { WebsocketContext } from "../../contexts/WebsocketContext";
 import { GameContext } from "../../contexts/GameContext";
 import { UpdateState } from "../../models/UpdateState/UpdateState";
@@ -19,15 +19,32 @@ import {
 import { GoalScored } from "../../models/GoalScored/GoalScored";
 import { MatchEnded } from "../../models/MatchEnded/MatchEnded";
 import { Scorebug } from "../Scorebug/Scorebug";
+import { TeamPlayerGroup } from "../TeamPlayerGroup/TeamPlayerGroup";
+import { GameService } from "../../services/gameService";
+import { PlayerBoostCircle } from "../PlayerBoostCircle/PlayerBoostCircle";
+import { PlayerStatCard } from "../PlayerStatCard/PlayerStatCard";
 
 export const Overlay = () => {
   const websocket = useContext(WebsocketContext);
   const { gameInfo, setGameInfo } = useContext(GameContext);
 
+  // State variables
+  const [hasSetWinner, setHasSetWinner] = useState<boolean>(false);
+  const [showPodium, setShowPodium] = useState<boolean>(false);
+
+  // Local variables
+  const spectatedPlayer = GameService.getPlayerFromTarget(
+    gameInfo.players,
+    gameInfo.target
+  );
+
   useEffect(() => {
     // Match Created
     websocket.subscribe("game", "match_created", (data: string) => {
       console.log("Match Created: ", data);
+      if (!hasSetWinner) {
+        setHasSetWinner(false);
+      }
     });
 
     // Initialized
@@ -38,6 +55,7 @@ export const Overlay = () => {
     // Pre Countdown Begin
     websocket.subscribe("game", "pre_countdown_begin", (data: string) => {
       console.log("Pre Countdown Begin: ", data);
+      setShowPodium(false);
     });
 
     // Post Countdown Begin
@@ -47,10 +65,6 @@ export const Overlay = () => {
 
     // Update State
     websocket.subscribe("game", "update_state", (data: UpdateState) => {
-      const updatedPlayers: USPlayer[] = Object.values(data.players).map(
-        (player: USPlayer) => player
-      );
-
       setGameInfo({
         arena: data.game.arena,
         isOt: data.game.isOT,
@@ -58,7 +72,7 @@ export const Overlay = () => {
         target: data.game.target,
         timeRemaining: data.game.time_seconds,
         winner: data.game.winner,
-        players: updatedPlayers,
+        players: Object.values(data.players).map((player: USPlayer) => player),
         score: {
           blue: data.game.teams[0].score,
           orange: data.game.teams[1].score,
@@ -123,11 +137,34 @@ export const Overlay = () => {
     // Match Ended
     websocket.subscribe("game", "match_ended", (data: MatchEnded) => {
       console.log("Match Ended: ", data);
+      if (!hasSetWinner) {
+        if (data.winner_team_num === 0) {
+          // Blue team won
+          setGameInfo({
+            ...gameInfo,
+            series: {
+              ...gameInfo.series,
+              blue: gameInfo.series.blue + 1,
+            },
+          });
+        } else {
+          // Orange team won
+          setGameInfo({
+            ...gameInfo,
+            series: {
+              ...gameInfo.series,
+              orange: gameInfo.series.orange + 1,
+            },
+          });
+        }
+        setHasSetWinner(true);
+      }
     });
 
     // Podium Start
     websocket.subscribe("game", "podium_start", (data: string) => {
       console.log("Podium Start: ", data);
+      setShowPodium(true);
     });
 
     // Match Destroyed
@@ -138,7 +175,30 @@ export const Overlay = () => {
 
   return (
     <>
-      <Scorebug />
+      {!showPodium && !hasSetWinner && (
+        <>
+          <TeamPlayerGroup isLeft />
+          <TeamPlayerGroup isLeft={false} />
+          <Scorebug />
+          {!gameInfo.isReplay && spectatedPlayer && (
+            <>
+              <PlayerBoostCircle
+                boost={spectatedPlayer.boost}
+                isBlue={spectatedPlayer.team === 0}
+              />
+              <PlayerStatCard
+                playerName={spectatedPlayer.name}
+                goals={spectatedPlayer.goals}
+                assists={spectatedPlayer.assists}
+                saves={spectatedPlayer.saves}
+                shots={spectatedPlayer.shots}
+                isBlue={spectatedPlayer.team === 0}
+              />
+            </>
+          )}
+          {gameInfo.isReplay && <></>}
+        </>
+      )}
     </>
   );
 };

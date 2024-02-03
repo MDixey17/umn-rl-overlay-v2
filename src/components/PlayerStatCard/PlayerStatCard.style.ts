@@ -12,7 +12,7 @@ export const StatCardWrapper = styled.div<{
   color: ${(props) => props.secondary};
   position: absolute;
   left: ${TEAM_PLAYER_GROUP.sideOffset}px;
-  bottom: 80px;
+  bottom: 120px;
   height: ${PLAYER_STATS_CARD.height}px;
   width: ${PLAYER_STATS_CARD.width}px;
   font-family: bahnschrift;

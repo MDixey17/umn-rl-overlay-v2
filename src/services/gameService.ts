@@ -25,9 +25,14 @@ const getClockFromSeconds = (seconds: number, isOt: boolean): string => {
     : `${numMinutes}:${numSecondsString}`;
 };
 
+const getRequiredWins = (seriesLength: number): number => {
+  return Math.ceil(seriesLength / 2);
+};
+
 export const GameService = {
   getOrangeTeam,
   getBlueTeam,
   getPlayerFromTarget,
   getClockFromSeconds,
+  getRequiredWins,
 };

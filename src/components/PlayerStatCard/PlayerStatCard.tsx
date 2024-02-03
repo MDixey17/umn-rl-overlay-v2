@@ -1,3 +1,4 @@
+import { useContext } from "react";
 import { PLAYER_STATS_CARD } from "../../constants/ComponentConstants";
 import {
   PlayerText,
@@ -8,28 +9,35 @@ import {
   StatValue,
   StatWrapper,
 } from "./PlayerStatCard.style";
+import { ConfigContext } from "../../contexts/ConfigContext";
 
 interface PlayerStatCardProps {
   playerName: string;
-  isUMN: boolean;
   goals: number;
   assists: number;
   saves: number;
   shots: number;
-  primaryColor: string;
-  secondaryColor: string;
+  isBlue: boolean;
 }
 
 export const PlayerStatCard = ({
   playerName,
-  isUMN,
   goals,
   assists,
   saves,
   shots,
-  primaryColor,
-  secondaryColor,
+  isBlue,
 }: PlayerStatCardProps) => {
+  const { configInfo } = useContext(ConfigContext);
+  const primaryColor = isBlue
+    ? configInfo.blue.primary
+    : configInfo.orange.primary;
+  const secondaryColor = isBlue
+    ? configInfo.blue.secondary
+    : configInfo.orange.secondary;
+
+  const isUMN = isBlue ? configInfo.blue.isUMN : configInfo.orange.isUMN;
+
   return (
     <StatCardWrapper primary={primaryColor} secondary={secondaryColor}>
       <PlayerText>{playerName}</PlayerText>

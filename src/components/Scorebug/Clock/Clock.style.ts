@@ -10,7 +10,7 @@ export const ClockTrapezoid = styled.div`
   border-left: ${SCOREBUG_TEAM.height}px solid transparent;
   border-right: ${SCOREBUG_TEAM.height}px solid transparent;
   height: ${SCOREBUG_CLOCK.height};
-  width: ${SCOREBUG_CLOCK.topWidth};
+  width: ${SCOREBUG_CLOCK.topWidth}px;
   position: absolute;
   left: ${SCOREBUG_CLOCK.leftPercentage}%;
   top: ${SCOREBUG_CLOCK.topOffset}px;
@@ -23,9 +23,7 @@ export const ClockText = styled.p<{ isOt: boolean }>`
   position: absolute;
   left: ${SCOREBUG_CLOCK.text.leftPercentage}%;
   top: ${(props) =>
-    props.isOt
-      ? SCOREBUG_CLOCK.overtime.topOffset
-      : SCOREBUG_CLOCK.topOffset}px;
+    props.isOt ? SCOREBUG_CLOCK.overtime.topOffset : SCOREBUG_CLOCK.text.top}px;
   color: white;
   z-index: ${SCOREBUG_CLOCK.text.zIndex};
 `;

@@ -37,7 +37,6 @@ export const PlayerBoostBar = ({
         <BoostBarText isBoost>{boostAmount}</BoostBarText>
       </BoostBarTextWrapper>
       <BoostBarSliding
-        color={secondaryColor}
         width={BoostService.getBoostBarWidth(
           boostAmount,
           PLAYER_BOOST_BAR.width

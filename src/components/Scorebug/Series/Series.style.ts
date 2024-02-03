@@ -19,7 +19,7 @@ export const SeriesShape = styled.div<{
         props.index * SCOREBUG_SERIES.horizontalOffset}px;
   height: ${SCOREBUG_SERIES.height}px;
   width: ${SCOREBUG_SERIES.width}px;
-  background: ${(props) => (props.isWon ? props.color : "white")};
+  background: ${(props) => (props.isWon ? props.color : "#777777")};
   transform: ${(props) => (props.isLeft ? "skew(40deg)" : "skew(-40deg)")};
   z-index: ${SCOREBUG_SERIES.zIndex};
   ${(props) =>
