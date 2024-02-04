@@ -122,7 +122,18 @@ export const SCOREBUG_TEAM = {
   },
 };
 
-export const GOAL_REPLAY = {};
+export const GOAL_REPLAY = {
+  height: SCOREBUG_TEAM.height,
+  width: SCOREBUG_TEAM.topWidth - 200,
+  leftPercentage: 25,
+  logo: {
+    width: 25,
+    height: 45,
+  },
+  scorer: {
+    fontSize: SCOREBUG_TEAM.fontSize,
+  },
+};
 
 export const POSTGAME = {
   height: 1080,

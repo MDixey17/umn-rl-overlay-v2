@@ -18,7 +18,7 @@ export const HCWinner = ({ gameInfo, isUmnWinner }: HCWinnerProps) => {
       () => {
         setShowPostgame(true);
       },
-      isUmnWinner ? 9800 : 3400
+      isUmnWinner ? 9400 : 3000
     );
   });
 

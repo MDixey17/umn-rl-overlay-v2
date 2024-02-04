@@ -29,6 +29,8 @@ import { BroadcastCard } from "../BroadcastCard/BroadcastCard";
 import { GameInfo } from "../../models/contexts/GameInfo";
 import { HCWinner } from "../HypeChamber/HCWinner/HCWinner";
 import { HCTransition } from "../HypeChamber/HCTransition/HCTransition";
+import { GoalReplay } from "../GoalReplay/GoalReplay";
+import { GoalScored } from "../../models/GoalScored/GoalScored";
 
 export const Overlay = () => {
   const websocket = useContext(WebsocketContext);
@@ -42,6 +44,8 @@ export const Overlay = () => {
   const [isUmnWinner, setUmnWinner] = useState<boolean>(false);
   const [showOverlay, setShowOverlay] = useState<boolean>(false);
   const [isNewGame, setNewGame] = useState<boolean>(false);
+  const [goal, setGoal] = useState<GoalScored | null>(null);
+  const [isReplay, setIsReplay] = useState<boolean>(false);
 
   // Local variables
   const spectatedPlayer = GameService.getPlayerFromTarget(
@@ -79,10 +83,15 @@ export const Overlay = () => {
     // Post Countdown Begin - kickoff timer
     websocket.subscribe("game", "post_countdown_begin", (data: string) => {
       // console.log("Post Countdown Begin: ", data);
-      setShowPodium(false);
+      if (showPodium) {
+        setShowPodium(false);
+      }
       if (hasSetWinner) {
         setHasSetWinner(false);
         setMatchSave(null);
+      }
+      if (isReplay) {
+        setIsReplay(false);
       }
     });
 
@@ -137,15 +146,18 @@ export const Overlay = () => {
     //   }
     // });
 
-    // // Goal Scored
-    // websocket.subscribe("game", "goal_scored", (data: GoalScored) => {
-    //   // console.log("Goal Scored: ", data);
-    // });
+    // Goal Scored
+    websocket.subscribe("game", "goal_scored", (data: GoalScored) => {
+      setGoal(data);
+    });
 
-    // // Replay Start
-    // websocket.subscribe("game", "replay_start", (data: string) => {
-    //   // console.log("Replay Start: ", data);
-    // });
+    // Replay Start
+    websocket.subscribe("game", "replay_start", (data: string) => {
+      // console.log("Replay Start: ", data);
+      if (!isReplay) {
+        setIsReplay(true);
+      }
+    });
 
     // // Replay Will End - triggers when the goal in the replay occurs
     // websocket.subscribe("game", "replay_will_end", (data: string) => {
@@ -239,7 +251,12 @@ export const Overlay = () => {
                   />
                 </>
               )}
-              {gameInfo.isReplay && <></>}
+              <GoalReplay
+                show={isReplay}
+                team={goal?.scorer.team_num ?? goal?.scorer.teamnum}
+                scorer={goal?.scorer.name}
+                isNull={goal === null}
+              />
             </>
           )}
         </>

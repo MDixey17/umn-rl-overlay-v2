@@ -13,6 +13,34 @@
   }
 }
 
+@keyframes slidedown {
+  0% {
+    top: 20px;
+  }
+
+  30% {
+    top: 90px;
+  }
+
+  70% {
+    top: 90px;
+  }
+
+  100% {
+    top: 20px;
+  }
+}
+
+@keyframes growingtext {
+  from {
+    letter-spacing: normal;
+  }
+
+  to {
+    letter-spacing: 8px;
+  }
+}
+
 body {
   margin: 0;
   height: 1080px;

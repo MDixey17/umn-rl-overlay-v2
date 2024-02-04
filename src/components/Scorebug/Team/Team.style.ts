@@ -19,6 +19,7 @@ export const TeamTrapezoid = styled.div<{
       ? SCOREBUG_TEAM.leftTeam.leftPercentage
       : SCOREBUG_TEAM.rightTeam.leftPercentage}%;
   top: ${SCOREBUG_TEAM.top}px;
+  z-index: 2;
 `;
 
 export const TeamSecondary = styled.div<{
@@ -36,6 +37,7 @@ export const TeamSecondary = styled.div<{
       ? SCOREBUG_TEAM.leftTeam.secondary.leftPercentage
       : SCOREBUG_TEAM.rightTeam.secondary.leftPercentage}%;
   top: ${SCOREBUG_TEAM.top}px;
+  z-index: 2;
 `;
 
 export const TeamText = styled.p<{
@@ -49,6 +51,7 @@ export const TeamText = styled.p<{
       : SCOREBUG_TEAM.rightTeam.text.leftPercentage}%;
   top: ${SCOREBUG_TEAM.textTop}px;
   color: white;
+  z-index: 2;
 `;
 
 export const TeamLogo = styled.img<{ isLeft: boolean }>`
@@ -60,4 +63,5 @@ export const TeamLogo = styled.img<{ isLeft: boolean }>`
   top: ${SCOREBUG_TEAM.logoTop}px;
   height: ${SCOREBUG_TEAM.logoHeight}px;
   width: ${SCOREBUG_TEAM.logoWidth}px;
+  z-index: 2;
 `;
