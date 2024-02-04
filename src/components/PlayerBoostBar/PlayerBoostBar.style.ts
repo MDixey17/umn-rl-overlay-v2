@@ -26,10 +26,11 @@ export const BoostBarDefault = styled.div<{ index: number }>`
 export const BoostBarSliding = styled.div<{
   width: number;
   index: number;
+  endColor: string;
 }>`
   height: ${PLAYER_BOOST_BAR.boostBarHeight}px;
   width: ${(props) => props.width}px;
-  background: linear-gradient(to right, yellow, red);
+  background: linear-gradient(to right, yellow, ${(props) => props.endColor});
   position: absolute;
   top: ${(props) => props.index * 52.8 + 37}px;
   z-index: 9999;
