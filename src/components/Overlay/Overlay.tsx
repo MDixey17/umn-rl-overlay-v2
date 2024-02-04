@@ -26,8 +26,9 @@ import { PlayerStatCard } from "../PlayerStatCard/PlayerStatCard";
 import { ConfigContext } from "../../contexts/ConfigContext";
 import { LeagueCard } from "../LeagueCard/LeagueCard";
 import { BroadcastCard } from "../BroadcastCard/BroadcastCard";
-import { Postgame } from "../Postgame/Postgame";
 import { GameInfo } from "../../models/contexts/GameInfo";
+import { HCWinner } from "../HypeChamber/HCWinner/HCWinner";
+import { HCTransition } from "../HypeChamber/HCTransition/HCTransition";
 
 export const Overlay = () => {
   const websocket = useContext(WebsocketContext);
@@ -38,12 +39,25 @@ export const Overlay = () => {
   const [hasSetWinner, setHasSetWinner] = useState<boolean>(false);
   const [showPodium, setShowPodium] = useState<boolean>(false);
   const [matchSave, setMatchSave] = useState<GameInfo | null>(null);
+  const [isUmnWinner, setUmnWinner] = useState<boolean>(false);
+  const [showOverlay, setShowOverlay] = useState<boolean>(false);
+  const [isNewGame, setNewGame] = useState<boolean>(false);
 
   // Local variables
   const spectatedPlayer = GameService.getPlayerFromTarget(
     gameInfo.players,
     gameInfo.target
   );
+
+  useEffect(() => {
+    if (isNewGame) {
+      setShowOverlay(false);
+      setTimeout(() => {
+        setShowOverlay(true);
+        setNewGame(false);
+      }, 1000);
+    }
+  }, [isNewGame]);
 
   useEffect(() => {
     // // Match Created - first load into game, kickoff countdown NOT started
@@ -56,10 +70,11 @@ export const Overlay = () => {
     //   // console.log("Initialized: ", data);
     // });
 
-    // // Pre Countdown Begin - buffer time before kickoff - when game is waiting for players to join teams evenly
-    // websocket.subscribe("game", "pre_countdown_begin", (data: string) => {
-    //   // console.log("Pre Countdown Begin: ", data);
-    // });
+    // Pre Countdown Begin - buffer time before kickoff - when game is waiting for players to join teams evenly
+    websocket.subscribe("game", "pre_countdown_begin", (data: string) => {
+      // console.log("Pre Countdown Begin: ", data);
+      setNewGame(true);
+    });
 
     // Post Countdown Begin - kickoff timer
     websocket.subscribe("game", "post_countdown_begin", (data: string) => {
@@ -157,6 +172,8 @@ export const Overlay = () => {
               blue: gameInfo.series.blue + 1,
             },
           });
+
+          setUmnWinner(configInfo.blue.isUMN);
         } else {
           // Orange team won
           setGameInfo({
@@ -166,6 +183,8 @@ export const Overlay = () => {
               orange: gameInfo.series.orange + 1,
             },
           });
+
+          setUmnWinner(configInfo.orange.isUMN);
         }
       }
     });
@@ -196,33 +215,38 @@ export const Overlay = () => {
     <>
       {!showPodium && !hasSetWinner && (
         <>
-          <TeamPlayerGroup isLeft />
-          <TeamPlayerGroup isLeft={false} />
-          <Scorebug />
-          {configInfo.leagueAvatar !== "" && <LeagueCard />}
-          {hasBroadcastTeam && <BroadcastCard hide={hideBroadcastTeam} />}
-          {!gameInfo.isReplay && spectatedPlayer && (
+          <HCTransition />
+          {showOverlay && (
             <>
-              <PlayerBoostCircle
-                boost={spectatedPlayer.boost}
-                isBlue={spectatedPlayer.team === 0}
-              />
-              <PlayerStatCard
-                playerName={spectatedPlayer.name}
-                goals={spectatedPlayer.goals}
-                assists={spectatedPlayer.assists}
-                saves={spectatedPlayer.saves}
-                shots={spectatedPlayer.shots}
-                isBlue={spectatedPlayer.team === 0}
-              />
+              <TeamPlayerGroup isLeft />
+              <TeamPlayerGroup isLeft={false} />
+              <Scorebug />
+              {configInfo.leagueAvatar !== "" && <LeagueCard />}
+              {hasBroadcastTeam && <BroadcastCard hide={hideBroadcastTeam} />}
+              {!gameInfo.isReplay && spectatedPlayer && (
+                <>
+                  <PlayerBoostCircle
+                    boost={spectatedPlayer.boost}
+                    isBlue={spectatedPlayer.team === 0}
+                  />
+                  <PlayerStatCard
+                    playerName={spectatedPlayer.name}
+                    goals={spectatedPlayer.goals}
+                    assists={spectatedPlayer.assists}
+                    saves={spectatedPlayer.saves}
+                    shots={spectatedPlayer.shots}
+                    isBlue={spectatedPlayer.team === 0}
+                  />
+                </>
+              )}
+              {gameInfo.isReplay && <></>}
             </>
           )}
-          {gameInfo.isReplay && <></>}
         </>
       )}
       {showPodium && (
         <>
-          <Postgame show gameInfo={matchSave} />
+          <HCWinner gameInfo={matchSave} isUmnWinner={isUmnWinner} />
         </>
       )}
     </>

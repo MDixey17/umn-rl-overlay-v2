@@ -33,7 +33,7 @@ export const BoostBarSliding = styled.div<{
   background: linear-gradient(to right, yellow, ${(props) => props.endColor});
   position: absolute;
   top: ${(props) => props.index * 52.8 + 37}px;
-  z-index: 9999;
+  z-index: 999;
 `;
 
 export const BoostBarTextWrapper = styled.div`
