@@ -21,7 +21,10 @@ export const ClockText = styled.p<{ isOt: boolean }>`
   font-size: ${(props) =>
     props.isOt ? SCOREBUG_CLOCK.overtime.fontSize : SCOREBUG_CLOCK.fontSize}px;
   position: absolute;
-  left: ${SCOREBUG_CLOCK.text.leftPercentage}%;
+  left: ${(props) =>
+    props.isOt
+      ? SCOREBUG_CLOCK.overtime.leftPercentage
+      : SCOREBUG_CLOCK.text.leftPercentage}%;
   top: ${(props) =>
     props.isOt ? SCOREBUG_CLOCK.overtime.topOffset : SCOREBUG_CLOCK.text.top}px;
   color: white;

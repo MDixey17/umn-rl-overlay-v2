@@ -75,13 +75,14 @@ export const SCOREBUG_CLOCK = {
   zIndex: 3,
   borderTopWidth: 70,
   text: {
-    leftPercentage: 47.3,
+    leftPercentage: 47.5,
     top: -28,
     zIndex: 4,
   },
   overtime: {
     fontSize: 50,
-    topOffset: 16,
+    topOffset: -22,
+    leftPercentage: 47,
   },
 };
 
@@ -148,13 +149,13 @@ export const POSTGAME = {
       left: 204,
     },
     orange: {
-      left: 994,
+      left: 1024,
     },
   },
   header: {
     top: TEAM_PLAYER_GROUP.topOffset,
-    leftPercentage: 23.9,
-    width: 1000,
+    leftPercentage: 18.8,
+    width: 1200,
     height: 200,
     fontSize: 64,
     logoHeight: 100,

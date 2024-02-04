@@ -3,20 +3,20 @@ import { WebsocketContext } from "../../contexts/WebsocketContext";
 import { GameContext } from "../../contexts/GameContext";
 import { UpdateState } from "../../models/UpdateState/UpdateState";
 import { USPlayer } from "../../models/UpdateState/USPlayer";
-import { BallHit } from "../../models/BallHit/BallHit";
-import { StatfeedEvent } from "../../models/StatfeedEvent/StatfeedEvent";
-import {
-  ASSIST_EVENT,
-  DEMO_EVENT,
-  EPIC_SAVE_EVENT,
-  GOAL_EVENT,
-  LONG_GOAL_EVENT,
-  MVP_EVENT,
-  SAVE_EVENT,
-  SHOT_EVENT,
-  WIN_EVENT,
-} from "../../constants/GameConstants";
-import { GoalScored } from "../../models/GoalScored/GoalScored";
+// import { BallHit } from "../../models/BallHit/BallHit";
+// import { StatfeedEvent } from "../../models/StatfeedEvent/StatfeedEvent";
+// import {
+//   ASSIST_EVENT,
+//   DEMO_EVENT,
+//   EPIC_SAVE_EVENT,
+//   GOAL_EVENT,
+//   LONG_GOAL_EVENT,
+//   MVP_EVENT,
+//   SAVE_EVENT,
+//   SHOT_EVENT,
+//   WIN_EVENT,
+// } from "../../constants/GameConstants";
+// import { GoalScored } from "../../models/GoalScored/GoalScored";
 import { MatchEnded } from "../../models/MatchEnded/MatchEnded";
 import { Scorebug } from "../Scorebug/Scorebug";
 import { TeamPlayerGroup } from "../TeamPlayerGroup/TeamPlayerGroup";
@@ -26,6 +26,8 @@ import { PlayerStatCard } from "../PlayerStatCard/PlayerStatCard";
 import { ConfigContext } from "../../contexts/ConfigContext";
 import { LeagueCard } from "../LeagueCard/LeagueCard";
 import { BroadcastCard } from "../BroadcastCard/BroadcastCard";
+import { Postgame } from "../Postgame/Postgame";
+import { GameInfo } from "../../models/contexts/GameInfo";
 
 export const Overlay = () => {
   const websocket = useContext(WebsocketContext);
@@ -35,6 +37,7 @@ export const Overlay = () => {
   // State variables
   const [hasSetWinner, setHasSetWinner] = useState<boolean>(false);
   const [showPodium, setShowPodium] = useState<boolean>(false);
+  const [matchSave, setMatchSave] = useState<GameInfo | null>(null);
 
   // Local variables
   const spectatedPlayer = GameService.getPlayerFromTarget(
@@ -43,28 +46,29 @@ export const Overlay = () => {
   );
 
   useEffect(() => {
-    // Match Created
-    websocket.subscribe("game", "match_created", (data: string) => {
-      console.log("Match Created: ", data);
-      if (!hasSetWinner) {
-        setHasSetWinner(false);
-      }
-    });
+    // // Match Created - first load into game, kickoff countdown NOT started
+    // websocket.subscribe("game", "match_created", (data: string) => {
+    //   // console.log("Match Created: ", data);
+    // });
 
-    // Initialized
-    websocket.subscribe("game", "initialized", (data: string) => {
-      console.log("Initialized: ", data);
-    });
+    // // Initialized
+    // websocket.subscribe("game", "initialized", (data: string) => {
+    //   // console.log("Initialized: ", data);
+    // });
 
-    // Pre Countdown Begin
-    websocket.subscribe("game", "pre_countdown_begin", (data: string) => {
-      console.log("Pre Countdown Begin: ", data);
-      setShowPodium(false);
-    });
+    // // Pre Countdown Begin - buffer time before kickoff - when game is waiting for players to join teams evenly
+    // websocket.subscribe("game", "pre_countdown_begin", (data: string) => {
+    //   // console.log("Pre Countdown Begin: ", data);
+    // });
 
-    // Post Countdown Begin
+    // Post Countdown Begin - kickoff timer
     websocket.subscribe("game", "post_countdown_begin", (data: string) => {
-      console.log("Post Countdown Begin: ", data);
+      // console.log("Post Countdown Begin: ", data);
+      setShowPodium(false);
+      if (hasSetWinner) {
+        setHasSetWinner(false);
+        setMatchSave(null);
+      }
     });
 
     // Update State
@@ -88,60 +92,62 @@ export const Overlay = () => {
       });
     });
 
-    // Ball Hit
-    websocket.subscribe("game", "ball_hit", (data: BallHit) => {
-      console.log("Ball Hit: ", data);
-    });
+    // // Ball Hit
+    // websocket.subscribe("game", "ball_hit", (data: BallHit) => {
+    //   // console.log("Ball Hit: ", data);
+    // });
 
-    // Statfeed Event
-    websocket.subscribe("game", "statfeed_event", (data: StatfeedEvent) => {
-      if (data.event_name === GOAL_EVENT) {
-        console.log("Statfeed - Goal Event: ", data);
-      } else if (data.event_name === ASSIST_EVENT) {
-        console.log("Statfeed - Assist Event: ", data);
-      } else if (data.event_name === SHOT_EVENT) {
-        console.log("Statfeed - Shot Event: ", data);
-      } else if (data.event_name === SAVE_EVENT) {
-        console.log("Statfeed - Save Event: ", data);
-      } else if (data.event_name === EPIC_SAVE_EVENT) {
-        console.log("Statfeed - Epic Save Event: ", data);
-      } else if (data.event_name === WIN_EVENT) {
-        console.log("Statfeed - Win Event: ", data);
-      } else if (data.event_name === MVP_EVENT) {
-        console.log("Statfeed - MVP Event: ", data);
-      } else if (data.event_name === LONG_GOAL_EVENT) {
-        console.log("Statfeed - Long Goal Event: ", data);
-      } else if (data.event_name === DEMO_EVENT) {
-        console.log("Statfeed - Demolish Event: ", data);
-      } else {
-        console.log("Statfeed - Unknown Event: ", data);
-      }
-    });
+    // // Statfeed Event
+    // websocket.subscribe("game", "statfeed_event", (data: StatfeedEvent) => {
+    //   if (data.event_name === GOAL_EVENT) {
+    //     // console.log("Statfeed - Goal Event: ", data);
+    //   } else if (data.event_name === ASSIST_EVENT) {
+    //     // console.log("Statfeed - Assist Event: ", data);
+    //   } else if (data.event_name === SHOT_EVENT) {
+    //     // console.log("Statfeed - Shot Event: ", data);
+    //   } else if (data.event_name === SAVE_EVENT) {
+    //     // console.log("Statfeed - Save Event: ", data);
+    //   } else if (data.event_name === EPIC_SAVE_EVENT) {
+    //     // console.log("Statfeed - Epic Save Event: ", data);
+    //   } else if (data.event_name === WIN_EVENT) {
+    //     // console.log("Statfeed - Win Event: ", data);
+    //   } else if (data.event_name === MVP_EVENT) {
+    //     // console.log("Statfeed - MVP Event: ", data);
+    //   } else if (data.event_name === LONG_GOAL_EVENT) {
+    //     // console.log("Statfeed - Long Goal Event: ", data);
+    //   } else if (data.event_name === DEMO_EVENT) {
+    //     // console.log("Statfeed - Demolish Event: ", data);
+    //   } else {
+    //     console.log("Statfeed - Unknown Event: ", data);
+    //   }
+    // });
 
-    // Goal Scored
-    websocket.subscribe("game", "goal_scored", (data: GoalScored) => {
-      console.log("Goal Scored: ", data);
-    });
+    // // Goal Scored
+    // websocket.subscribe("game", "goal_scored", (data: GoalScored) => {
+    //   // console.log("Goal Scored: ", data);
+    // });
 
-    // Replay Start
-    websocket.subscribe("game", "replay_start", (data: string) => {
-      console.log("Replay Start: ", data);
-    });
+    // // Replay Start
+    // websocket.subscribe("game", "replay_start", (data: string) => {
+    //   // console.log("Replay Start: ", data);
+    // });
 
-    // Replay Will End
-    websocket.subscribe("game", "replay_will_end", (data: string) => {
-      console.log("Replay Will End: ", data);
-    });
+    // // Replay Will End - triggers when the goal in the replay occurs
+    // websocket.subscribe("game", "replay_will_end", (data: string) => {
+    //   // console.log("Replay Will End: ", data);
+    // });
 
-    // Replay End
-    websocket.subscribe("game", "replay_end", (data: string) => {
-      console.log("Replay End: ", data);
-    });
+    // // Replay End - triggers when replay ends and kickoff timer starts
+    // websocket.subscribe("game", "replay_end", (data: string) => {
+    //   // console.log("Replay End: ", data);
+    // });
 
     // Match Ended
     websocket.subscribe("game", "match_ended", (data: MatchEnded) => {
-      console.log("Match Ended: ", data);
+      // console.log("Match Ended: ", data);
       if (!hasSetWinner) {
+        setMatchSave(gameInfo);
+        setHasSetWinner(true);
         if (data.winner_team_num === 0) {
           // Blue team won
           setGameInfo({
@@ -161,20 +167,19 @@ export const Overlay = () => {
             },
           });
         }
-        setHasSetWinner(true);
       }
     });
 
-    // Podium Start
+    // Podium Start - Showing Podium
     websocket.subscribe("game", "podium_start", (data: string) => {
-      console.log("Podium Start: ", data);
+      // console.log("Podium Start: ", data);
       setShowPodium(true);
     });
 
-    // Match Destroyed
-    websocket.subscribe("game", "match_destroyed", (data: string) => {
-      console.log("Match Destroyed: ", data);
-    });
+    // // Match Destroyed
+    // websocket.subscribe("game", "match_destroyed", (data: string) => {
+    //   // console.log("Match Destroyed: ", data);
+    // });
   });
 
   const hasBroadcastTeam: boolean =
@@ -213,6 +218,11 @@ export const Overlay = () => {
             </>
           )}
           {gameInfo.isReplay && <></>}
+        </>
+      )}
+      {showPodium && (
+        <>
+          <Postgame show gameInfo={matchSave} />
         </>
       )}
     </>
