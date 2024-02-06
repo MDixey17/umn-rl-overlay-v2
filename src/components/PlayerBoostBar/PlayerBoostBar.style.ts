@@ -20,19 +20,24 @@ export const BoostBarDefault = styled.div<{ index: number }>`
   width: ${PLAYER_BOOST_BAR.width}px;
   background: rgba(0, 0, 0, 0.5);
   position: absolute;
-  top: ${(props) => props.index * 52.8 + 37}px;
+  top: ${(props) => (props.index + 1) * 40 + props.index * 15.5}px;
 `;
 
 export const BoostBarSliding = styled.div<{
   width: number;
   index: number;
+  startColor: string;
   endColor: string;
 }>`
   height: ${PLAYER_BOOST_BAR.boostBarHeight}px;
   width: ${(props) => props.width}px;
-  background: linear-gradient(to right, yellow, ${(props) => props.endColor});
+  background: linear-gradient(
+    to right,
+    ${(props) => `#${props.startColor}`},
+    ${(props) => props.endColor}
+  );
   position: absolute;
-  top: ${(props) => props.index * 52.8 + 37}px;
+  top: ${(props) => (props.index + 1) * 40 + props.index * 15.5}px;
   z-index: 999;
 `;
 

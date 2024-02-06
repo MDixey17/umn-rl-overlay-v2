@@ -2,7 +2,7 @@ import { GameInfo } from "../../models/contexts/GameInfo";
 import { PGHeader } from "./PGHeader/PGHeader";
 import { PGStatColumn } from "./PGStatColumn/PGStatColumn";
 import { PGTeam } from "./PGTeam/PGTeam";
-import { PostgameWrapper } from "./Postgame.style";
+import { PostgameBackground, PostgameWrapper } from "./Postgame.style";
 
 interface PostgameProps {
   show: boolean;
@@ -17,6 +17,7 @@ export const Postgame = ({ show, gameInfo }: PostgameProps) => {
     <>
       {show && (
         <PostgameWrapper>
+          <PostgameBackground />
           <PGHeader
             blueScore={gameInfo.score.blue}
             orangeScore={gameInfo.score.orange}

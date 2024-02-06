@@ -14,25 +14,20 @@ export const HCWinner = ({ gameInfo, isUmnWinner }: HCWinnerProps) => {
   const [showPostgame, setShowPostgame] = useState<boolean>(false);
 
   useEffect(() => {
-    setTimeout(
-      () => {
-        setShowPostgame(true);
-      },
-      isUmnWinner ? 9400 : 3000
-    );
+    setTimeout(() => {
+      setShowPostgame(true);
+    }, 2500);
   });
 
   return (
     <>
-      {!showPostgame && (
-        <HCVideo id="hc-winner" autoPlay onEnded={onHCVideoEnd}>
-          <HCSource
-            type="video/mp4"
-            src={isUmnWinner ? HC_UMN_WINNER : HC_TRANSITION}
-          />
-        </HCVideo>
-      )}
       {showPostgame && <Postgame show gameInfo={gameInfo} />}
+      <HCVideo id="hc-winner" autoPlay onEnded={onHCVideoEnd}>
+        <HCSource
+          type="video/mp4"
+          src={isUmnWinner ? HC_UMN_WINNER : HC_TRANSITION}
+        />
+      </HCVideo>
     </>
   );
 };

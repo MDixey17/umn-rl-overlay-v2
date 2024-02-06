@@ -41,6 +41,22 @@
   }
 }
 
+@keyframes fadein {
+  from {
+    opacity: 0%;
+  }
+
+  to {
+    opacity: 100%;
+  }
+}
+
+@keyframes bgslide {
+  50% {
+    background-position: left;
+  }
+}
+
 body {
   margin: 0;
   height: 1080px;

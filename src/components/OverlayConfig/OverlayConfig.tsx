@@ -36,8 +36,8 @@ const LEAGUE_LOGO_MAP: Map<string, string> = new Map([
 export const OverlayConfig = () => {
   const { configInfo, setConfigInfo } = useContext(ConfigContext);
 
-  const UMN_PRIMARY = "#7B0012";
-  const UMN_SECONDARY = "#FFCD30";
+  const UMN_PRIMARY = "#5f0b2f";
+  const UMN_SECONDARY = "#fabd22";
 
   const handleAvatarChange = (
     event: React.ChangeEvent<HTMLInputElement>,
@@ -299,7 +299,7 @@ export const OverlayConfig = () => {
             id="orange_primary_type"
             name="orange_primary_type"
             onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-              handlePrimaryChange(e, true)
+              handlePrimaryChange(e, false)
             }
             value={configInfo.orange.primary}
           />
@@ -319,7 +319,7 @@ export const OverlayConfig = () => {
             id="orange_secondary_type"
             name="orange_secondary_type"
             onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-              handlePrimaryChange(e, true)
+              handleSecondaryChange(e, false)
             }
             value={configInfo.orange.secondary}
           />

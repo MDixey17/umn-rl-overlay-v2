@@ -31,6 +31,7 @@ import { HCWinner } from "../HypeChamber/HCWinner/HCWinner";
 import { HCTransition } from "../HypeChamber/HCTransition/HCTransition";
 import { GoalReplay } from "../GoalReplay/GoalReplay";
 import { GoalScored } from "../../models/GoalScored/GoalScored";
+import { OverlayWrapper } from "./Overlay.style";
 
 export const Overlay = () => {
   const websocket = useContext(WebsocketContext);
@@ -46,6 +47,7 @@ export const Overlay = () => {
   const [isNewGame, setNewGame] = useState<boolean>(false);
   const [goal, setGoal] = useState<GoalScored | null>(null);
   const [isReplay, setIsReplay] = useState<boolean>(false);
+  const [showTransition, setShowTransition] = useState<boolean>(false);
 
   // Local variables
   const spectatedPlayer = GameService.getPlayerFromTarget(
@@ -55,44 +57,59 @@ export const Overlay = () => {
 
   useEffect(() => {
     if (isNewGame) {
-      setShowOverlay(false);
-      setTimeout(() => {
-        setShowOverlay(true);
-        setNewGame(false);
-      }, 1000);
+      setShowOverlay(true);
+      setNewGame(false);
     }
   }, [isNewGame]);
 
   useEffect(() => {
-    // // Match Created - first load into game, kickoff countdown NOT started
+    // Match Created - first load into game, kickoff countdown NOT started
     // websocket.subscribe("game", "match_created", (data: string) => {
-    //   // console.log("Match Created: ", data);
+    //   console.log("Match Created: ", data);
     // });
 
-    // // Initialized
+    // Initialized - Game, not just loading in
     // websocket.subscribe("game", "initialized", (data: string) => {
     //   // console.log("Initialized: ", data);
+    //   setShowTransition(true);
+    //   setTimeout(() => {
+    //     setNewGame(true);
+    //     setShowPodium(false);
+    //     setShowTransition(false);
+    //   }, 2000);
     // });
 
     // Pre Countdown Begin - buffer time before kickoff - when game is waiting for players to join teams evenly
-    websocket.subscribe("game", "pre_countdown_begin", (data: string) => {
-      // console.log("Pre Countdown Begin: ", data);
-      setNewGame(true);
-    });
+    // websocket.subscribe("game", "pre_countdown_begin", (data: string) => {
+    //   // console.log("Pre Countdown Begin: ", data);
+    // });
 
     // Post Countdown Begin - kickoff timer
     websocket.subscribe("game", "post_countdown_begin", (data: string) => {
       // console.log("Post Countdown Begin: ", data);
-      if (showPodium) {
-        setShowPodium(false);
+      if (
+        !showTransition &&
+        (gameInfo.series.blue > 0 || gameInfo.series.orange > 0)
+      ) {
+        setShowTransition(true);
+        setTimeout(() => {
+          setNewGame(true);
+          setShowPodium(false);
+        }, 2500);
+      } else {
+        setTimeout(() => {
+          setNewGame(true);
+        }, 2500);
       }
-      if (hasSetWinner) {
-        setHasSetWinner(false);
-        setMatchSave(null);
-      }
-      if (isReplay) {
-        setIsReplay(false);
-      }
+      setTimeout(() => {
+        if (hasSetWinner) {
+          setHasSetWinner(false);
+          setMatchSave(null);
+        }
+        if (isReplay) {
+          setIsReplay(false);
+        }
+      }, 3500);
     });
 
     // Update State
@@ -205,6 +222,7 @@ export const Overlay = () => {
     websocket.subscribe("game", "podium_start", (data: string) => {
       // console.log("Podium Start: ", data);
       setShowPodium(true);
+      setShowTransition(false);
     });
 
     // // Match Destroyed
@@ -227,9 +245,8 @@ export const Overlay = () => {
     <>
       {!showPodium && !hasSetWinner && (
         <>
-          <HCTransition />
           {showOverlay && (
-            <>
+            <OverlayWrapper>
               <TeamPlayerGroup isLeft />
               <TeamPlayerGroup isLeft={false} />
               <Scorebug />
@@ -257,7 +274,7 @@ export const Overlay = () => {
                 scorer={goal?.scorer.name}
                 isNull={goal === null}
               />
-            </>
+            </OverlayWrapper>
           )}
         </>
       )}
@@ -266,6 +283,7 @@ export const Overlay = () => {
           <HCWinner gameInfo={matchSave} isUmnWinner={isUmnWinner} />
         </>
       )}
+      {showTransition && <HCTransition />}
     </>
   );
 };

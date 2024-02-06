@@ -1,3 +1,4 @@
+import { useContext } from "react";
 import { PLAYER_BOOST_BAR } from "../../constants/ComponentConstants";
 import { BoostService } from "../../services/boostService";
 import {
@@ -7,6 +8,7 @@ import {
   BoostBarTextWrapper,
   BoostBarWrapper,
 } from "./PlayerBoostBar.style";
+import { ConfigContext } from "../../contexts/ConfigContext";
 
 interface PlayerBoostBarProps {
   isLeft: boolean;
@@ -25,9 +27,14 @@ export const PlayerBoostBar = ({
   primaryColor,
   secondaryColor,
 }: PlayerBoostBarProps) => {
+  const { configInfo } = useContext(ConfigContext);
+
+  const startHex: string = isLeft
+    ? configInfo.blue.secondary.substring(1)
+    : configInfo.orange.secondary.substring(1);
+  const endHex: string = "FF0000";
+
   const computeEndColor = (): string => {
-    const yellowHex: string = "FFFF00";
-    const redHex: string = "FF0000";
     const ratio = boostAmount / 100;
 
     const toHex = (n: number) => {
@@ -36,16 +43,16 @@ export const PlayerBoostBar = ({
     };
 
     const r = Math.ceil(
-      parseInt(redHex.substring(0, 2), 16) * ratio +
-        parseInt(yellowHex.substring(0, 2), 16) * (1 - ratio)
+      parseInt(endHex.substring(0, 2), 16) * ratio +
+        parseInt(startHex.substring(0, 2), 16) * (1 - ratio)
     );
     const g = Math.ceil(
-      parseInt(redHex.substring(2, 4), 16) * ratio +
-        parseInt(yellowHex.substring(2, 4), 16) * (1 - ratio)
+      parseInt(endHex.substring(2, 4), 16) * ratio +
+        parseInt(startHex.substring(2, 4), 16) * (1 - ratio)
     );
     const b = Math.ceil(
-      parseInt(redHex.substring(4, 6), 16) * ratio +
-        parseInt(yellowHex.substring(4, 6), 16) * (1 - ratio)
+      parseInt(endHex.substring(4, 6), 16) * ratio +
+        parseInt(startHex.substring(4, 6), 16) * (1 - ratio)
     );
 
     return "#" + toHex(r) + toHex(g) + toHex(b);
@@ -68,6 +75,7 @@ export const PlayerBoostBar = ({
           PLAYER_BOOST_BAR.width
         )}
         index={index}
+        startColor={startHex}
         endColor={computeEndColor()}
       />
       <BoostBarDefault index={index} />

@@ -6,11 +6,7 @@ export const LeagueCardWrapper = styled.div`
   top: 260px;
   right: -4px;
   background: rgb(123, 0, 18);
-  background: radial-gradient(
-    circle,
-    rgba(123, 0, 18, 1) 0%,
-    rgba(27, 0, 4, 1) 100%
-  );
+  background: radial-gradient(circle, #5f0b2f 0%, rgba(27, 0, 4, 1) 100%);
   border: 4px solid #ffcd30;
   max-width: ${LEAGUE_CARD.wrapper.width}px;
   max-height: ${LEAGUE_CARD.wrapper.height}px;
