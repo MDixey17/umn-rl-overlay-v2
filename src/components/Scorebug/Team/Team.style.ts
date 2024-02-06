@@ -52,6 +52,8 @@ export const TeamText = styled.p<{
   top: ${SCOREBUG_TEAM.textTop}px;
   color: white;
   z-index: 2;
+  -webkit-text-stroke-width: 2px;
+  -webkit-text-stroke-color: black;
 `;
 
 export const TeamLogo = styled.img<{ isLeft: boolean }>`
