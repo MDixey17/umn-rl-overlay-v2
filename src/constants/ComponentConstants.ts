@@ -55,8 +55,8 @@ export const PLAYER_STATS_CARD = {
 };
 
 export const SCOREBUG_SERIES = {
-  leftStart: 865,
-  rightStart: 1030,
+  leftStart: 860,
+  rightStart: 1025,
   horizontalOffset: 24,
   top: 50,
   height: 15,

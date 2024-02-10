@@ -13,7 +13,10 @@ interface SeriesProps {
 export const Series = ({ isLeft, leftOffset, topOffset }: SeriesProps) => {
   const { gameInfo } = useContext(GameContext);
   const { configInfo } = useContext(ConfigContext);
-  const color = isLeft
+  const primaryColor = isLeft
+    ? configInfo.blue.primary
+    : configInfo.orange.primary;
+  const secondaryColor = isLeft
     ? configInfo.blue.secondary
     : configInfo.orange.secondary;
 
@@ -29,7 +32,8 @@ export const Series = ({ isLeft, leftOffset, topOffset }: SeriesProps) => {
                 (isLeft ? gameInfo.series.blue : gameInfo.series.orange) - 1 >=
                 indx
               }
-              color={color}
+              primary={primaryColor}
+              secondary={secondaryColor}
               leftOffset={leftOffset}
               topOffset={topOffset}
             />

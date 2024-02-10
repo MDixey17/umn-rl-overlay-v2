@@ -5,7 +5,8 @@ export const SeriesShape = styled.div<{
   isLeft: boolean;
   index: number;
   isWon: boolean;
-  color: string;
+  primary: string;
+  secondary: string;
   leftOffset?: number;
   topOffset?: number;
 }>`
@@ -19,7 +20,12 @@ export const SeriesShape = styled.div<{
         props.index * SCOREBUG_SERIES.horizontalOffset}px;
   height: ${SCOREBUG_SERIES.height}px;
   width: ${SCOREBUG_SERIES.width}px;
-  background: ${(props) => (props.isWon ? props.color : "#777777")};
+  background: ${(props) =>
+    props.isWon
+      ? `linear-gradient(${props.isLeft ? "45deg" : "-45deg"}, #FFFFFF, ${
+          props.secondary
+        } 70%)`
+      : "#777777"};
   transform: ${(props) => (props.isLeft ? "skew(40deg)" : "skew(-40deg)")};
   z-index: ${SCOREBUG_SERIES.zIndex};
   ${(props) =>
