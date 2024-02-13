@@ -19,7 +19,7 @@ export const HeaderWrapper = styled.div`
 
 export const HeaderScore = styled.p`
   margin: 0;
-  -webkit-text-stroke-width: 2px;
+  -webkit-text-stroke-width: 1px;
   -webkit-text-stroke-color: black;
 `;
 

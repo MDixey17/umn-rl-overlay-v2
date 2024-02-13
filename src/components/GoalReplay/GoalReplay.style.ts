@@ -20,6 +20,8 @@ export const GRWrapper = styled.div<{
   align-items: center;
   animation-duration: 10s;
   z-index: 1;
+  border: 4px solid ${(props) => props.secondary};
+  border-top: none;
   ${(props) => (props.show ? `animation-name: slidedown;` : ``)}
 `;
 

@@ -25,10 +25,11 @@ import {
 import CRLLogo from "../../assets/logos/leagues/CRL.png";
 import NACELogo from "../../assets/logos/leagues/NACE.png";
 import SummerSeriesLogo from "../../assets/logos/leagues/SummerSeries.png";
+import BECLogo from "../../assets/logos/leagues/BEC.png";
 
 const LEAGUE_LOGO_MAP: Map<string, string> = new Map([
   ["CRL", CRLLogo],
-  ["BEC", ""],
+  ["BEC", BECLogo],
   ["Summer Series", SummerSeriesLogo],
   ["NACE", NACELogo],
 ]);
